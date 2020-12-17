@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">AgroXM</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_role">Role</string>
+
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="prompt_signup"><![CDATA[Don\'t have an account? <span style=\"color: #00c853\">SIGN UP</span>]]></string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="prompt_login"><![CDATA[Already a user? <span style=\"color: #00c853\">LOGIN</span>]]></string>
+    <string name="action_signup">Sign Up</string>
+    <string name="title_signup">Create Account</string>
+    <string name="title_login">Login</string>
+    <string name="permission_location_rationale">Location permission is needed if you want to see your location on the map.</string>
+    <string name="permission_location_title">Access to your location?</string>
+
+    <string name="hint_field_name">Field Name</string>
+    <string name="hint_field_description">Field Description</string>
+    <string name="hint_crop_name">Crop Name</string>
+    <string name="hint_crop_description">Crop Description</string>
 </resources>
