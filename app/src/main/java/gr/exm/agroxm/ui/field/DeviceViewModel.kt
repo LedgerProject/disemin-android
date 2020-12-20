@@ -58,7 +58,7 @@ class DeviceViewModel : ViewModel() {
 
         // Start new job
         job = CoroutineScope(Dispatchers.IO).launch {
-            val devices = ApiService.get().getLogFieldDevices(fieldId)
+            val devices = ApiService.get().getFieldDevices(fieldId)
             if (devices !is NetworkResponse.Success || devices.body.isNullOrEmpty()) {
                 Timber.d("No devices to query data for: $devices")
                 return@launch _data.postValue(Resource.error("No devices in this field."))

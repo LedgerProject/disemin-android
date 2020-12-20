@@ -8,6 +8,7 @@ import gr.exm.agroxm.BuildConfig
 import gr.exm.agroxm.data.*
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.util.AuthHelper.NO_AUTH_HEADER
+import gr.exm.agroxm.util.Measurements
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -112,7 +113,12 @@ interface ApiService {
     ): NetworkResponse<Log, ErrorResponse>
 
     @GET("/field/{id}/devices")
-    suspend fun getLogFieldDevices(
+    suspend fun getFieldDevices(
+        @Path("id") fieldId: String,
+    ): NetworkResponse<List<Device>, ErrorResponse>
+
+    @GET("/field/{id}/forecasts")
+    suspend fun getFieldForecastsZ(
         @Path("id") fieldId: String,
     ): NetworkResponse<List<Device>, ErrorResponse>
 
