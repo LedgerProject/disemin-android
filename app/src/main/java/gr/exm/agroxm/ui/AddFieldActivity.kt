@@ -10,10 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import gr.exm.agroxm.databinding.ActivityAddFieldBinding
-import gr.exm.agroxm.ui.addfield.AddFieldDevice
-import gr.exm.agroxm.ui.addfield.AddFieldInfo
-import gr.exm.agroxm.ui.addfield.AddFieldLocation
-import gr.exm.agroxm.ui.addfield.DataViewModel
+import gr.exm.agroxm.ui.addfield.*
 import timber.log.Timber
 
 interface DataProvider {
@@ -106,6 +103,7 @@ class AddFieldPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(ac
             STEP_LOCATION -> AddFieldLocation()
             STEP_INFO -> AddFieldInfo()
             STEP_DEVICE -> AddFieldDevice()
+            STEP_FORECAST -> AddFieldForecast()
             else -> AddFieldInfo()
         }
     }

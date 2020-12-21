@@ -1,5 +1,6 @@
 package gr.exm.agroxm.ui.main.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,9 @@ import androidx.lifecycle.whenCreated
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.data.Status
 import gr.exm.agroxm.databinding.FragmentHomeBinding
+import gr.exm.agroxm.ui.AddFieldActivity
 import gr.exm.agroxm.ui.main.MainViewModel
+import gr.exm.agroxm.util.REQUEST_CODE_ADD_FIELD
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.RuntimeException
@@ -46,10 +49,8 @@ class HomeFragment : Fragment() {
         binding.recycler.adapter = adapter
 
         binding.addField.setOnClickListener {
-            // TODO Add field flow
-            //startActivityForResult(Intent(context, AddFieldActivity::class.java), REQUEST_CODE_ADD_FIELD)
-            //throw RuntimeException("Something weird happened!")
-            Toast.makeText(requireActivity(), "Coming soon!", Toast.LENGTH_LONG).show()
+            startActivityForResult(Intent(context, AddFieldActivity::class.java), REQUEST_CODE_ADD_FIELD)
+            //Toast.makeText(requireActivity(), "Coming soon!", Toast.LENGTH_LONG).show()
         }
 
         binding.swiperefresh.setOnRefreshListener {
