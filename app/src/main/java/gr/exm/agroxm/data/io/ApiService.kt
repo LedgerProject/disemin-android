@@ -70,6 +70,28 @@ interface ApiService {
         @Query("interval") interval: Long = TimeUnit.HOURS.toMillis(1),
     ): NetworkResponse<Map<String, List<Telemetry>>, ErrorResponse>
 
+    @GET("/forecast/{deviceId}/data")
+    suspend fun forecastData(
+        @Path("deviceId") deviceId: String,
+        @Query("startTs") startTs: Long = LocalDateTime.now()
+            .minusDays(1)
+            .minusHours(1)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .toEpochSecond(ZoneOffset.UTC),
+        @Query("endTs") endTs: Long = LocalDateTime.now()
+            .plusHours(1)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .toEpochSecond(ZoneOffset.UTC),
+        @Query("limit") limit: Int = 50000,
+        @Query("keys") keys: String = "hourly_temperature,hourly_precip_intensity,hourly_humidity,hourly_wind_speed,hourly_wind_gust,hourly_wind_direction,hourly_pressure",
+        @Query("agg") aggregation: String = "NONE",
+        @Query("interval") interval: Long = TimeUnit.HOURS.toMillis(1),
+    ): NetworkResponse<Map<String, List<Telemetry>>, ErrorResponse>
+
     @POST("/field")
     suspend fun createField(
         @Body field: Field,
@@ -118,9 +140,9 @@ interface ApiService {
     ): NetworkResponse<List<Device>, ErrorResponse>
 
     @GET("/field/{id}/forecasts")
-    suspend fun getFieldForecastsZ(
+    suspend fun getFieldForecasts(
         @Path("id") fieldId: String,
-    ): NetworkResponse<List<Device>, ErrorResponse>
+    ): NetworkResponse<List<Forecast>, ErrorResponse>
 
     @GET("/devices")
     suspend fun getAvailableDevices(): NetworkResponse<List<Device>, ErrorResponse>

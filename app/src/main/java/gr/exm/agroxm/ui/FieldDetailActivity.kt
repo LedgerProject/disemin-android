@@ -9,6 +9,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.databinding.ActivityFieldDetailBinding
 import gr.exm.agroxm.ui.field.DeviceFragment
+import gr.exm.agroxm.ui.field.ForecastFragment
 
 class FieldDetailActivity : AppCompatActivity() {
 
@@ -49,7 +50,7 @@ class FieldDetailPagerAdapter(activity: FragmentActivity, val field: Field) :
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             PAGE_DEVICE -> DeviceFragment.newInstance(field.id)
-            PAGE_FORECAST -> DeviceFragment.newInstance(field.id)
+            PAGE_FORECAST -> ForecastFragment.newInstance(field.id)
             else -> Fragment()
         }
     }
