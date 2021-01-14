@@ -7,7 +7,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "gr.exm.agroxm"
@@ -100,7 +100,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
 
     // Network response wrapper
-    implementation "com.github.haroldadmin:NetworkResponseAdapter:4.0.1"
+    implementation "com.github.haroldadmin:NetworkResponseAdapter:4.1.0"
 
     // Map utilities library (for marker icon generation, polygons and more)
     implementation "com.google.maps.android:android-maps-utils:2.2.0"
@@ -109,7 +109,7 @@ dependencies {
     implementation "com.auth0.android:jwtdecode:2.0.0"
 
     // Animations
-    implementation "com.airbnb.android:lottie:3.5.0"
+    implementation "com.airbnb.android:lottie:3.6.0"
 
     // Charts
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
