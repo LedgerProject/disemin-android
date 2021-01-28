@@ -3,7 +3,7 @@ package gr.exm.agroxm.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import gr.exm.agroxm.util.AuthHelper
+import gr.exm.agroxm.data.AuthHelper
 import timber.log.Timber
 
 class SplashActivity : AppCompatActivity() {

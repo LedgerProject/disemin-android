@@ -11,7 +11,7 @@ import gr.exm.agroxm.R
 import gr.exm.agroxm.data.Credentials
 import gr.exm.agroxm.data.io.ApiService
 import gr.exm.agroxm.databinding.ActivityLoginBinding
-import gr.exm.agroxm.util.AuthHelper
+import gr.exm.agroxm.data.AuthHelper
 import gr.exm.agroxm.util.onTextChanged
 import kotlinx.coroutines.*
 import timber.log.Timber

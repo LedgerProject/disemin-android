@@ -1,10 +1,7 @@
-package gr.exm.agroxm.util
+package gr.exm.agroxm.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import gr.exm.agroxm.data.AuthToken
-import gr.exm.agroxm.data.Credentials
-import okhttp3.Request
 import timber.log.Timber
 
 object AuthHelper {
@@ -21,6 +18,9 @@ object AuthHelper {
     private const val KEY_REFRESH_TOKEN = "refresh_token"
 
     private lateinit var preferences: SharedPreferences
+
+    private var token: String? = null
+    private var refresh: String? = null
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(NAME, MODE)
@@ -46,15 +46,17 @@ object AuthHelper {
 
     fun getAuthToken(): AuthToken {
         return AuthToken(
-            token = preferences.getString(KEY_TOKEN, null),
-            refreshToken = preferences.getString(KEY_REFRESH_TOKEN, null)
+            token = preferences.getString(KEY_TOKEN, token),
+            refreshToken = preferences.getString(KEY_REFRESH_TOKEN, refresh)
         )
     }
 
     fun setAuthToken(authToken: AuthToken) {
+        token = authToken.token
+        refresh = authToken.refreshToken
         preferences.edit()
-            .putString(KEY_TOKEN, authToken.token)
-            .putString(KEY_REFRESH_TOKEN, authToken.token)
+            .putString(KEY_TOKEN, token)
+            .putString(KEY_REFRESH_TOKEN, refresh)
             .apply()
     }
 
@@ -90,25 +92,5 @@ object AuthHelper {
             .putString(KEY_USERNAME, credentials.username)
             .putString(KEY_PASSWORD, credentials.password)
             .apply()
-    }
-
-    fun Request.hasAuthHeader(): Boolean {
-        return this.header(AUTH_HEADER) != null
-    }
-
-    fun Request.signedRequest(): Request {
-        // Get stored auth token
-        val authToken = getAuthToken()
-
-        // Check validity
-        if (!authToken.isTokenValid()) {
-            // Log, but proceed
-            Timber.w("Invalid token %s", authToken)
-        }
-
-        // Return a new request, adding auth header
-        return this.newBuilder()
-            .header(AUTH_HEADER, "Bearer ${authToken.token}")
-            .build()
     }
 }

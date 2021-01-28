@@ -14,6 +14,9 @@ import gr.exm.agroxm.data.Resource
 import gr.exm.agroxm.data.TimeWindow
 import gr.exm.agroxm.data.io.ApiService
 import gr.exm.agroxm.util.ResourcesHelper
+import gr.exm.agroxm.util.endOfHour
+import gr.exm.agroxm.util.millis
+import gr.exm.agroxm.util.startOfHour
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,7 +24,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -114,7 +116,7 @@ class DeviceViewModel : ViewModel() {
                     startTs = LocalDateTime.now().minusHours(1).startOfHour().millis(),
                     endTs = LocalDateTime.now().endOfHour().millis(),
                     aggregation = Aggregation.AVG,
-                    interval = TimeUnit.MINUTES.toMillis(10)
+                    interval = TimeUnit.MINUTES.toMillis(5)
                 )
             }
             Mode.TODAY -> {
@@ -153,26 +155,5 @@ class DeviceViewModel : ViewModel() {
             circleColors = listOf(ResourcesHelper.getColor(R.color.chart_point_color))
             highLightColor = ResourcesHelper.getColor(R.color.chart_highlight_color)
         }
-    }
-
-    private fun LocalDateTime.startOfHour(): LocalDateTime {
-        return this.apply {
-            withMinute(0)
-            withSecond(0)
-            withNano(0)
-        }
-    }
-
-    private fun LocalDateTime.endOfHour(): LocalDateTime {
-        return this.apply {
-            plusHours(1)
-            withMinute(0)
-            withSecond(0)
-            withNano(0)
-        }
-    }
-
-    private fun LocalDateTime.millis(): Long {
-        return TimeUnit.SECONDS.toMillis(this.atZone(ZoneOffset.systemDefault()).toEpochSecond())
     }
 }

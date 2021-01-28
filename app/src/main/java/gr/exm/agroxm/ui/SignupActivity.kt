@@ -13,7 +13,7 @@ import gr.exm.agroxm.data.Role
 import gr.exm.agroxm.data.io.ApiService
 import gr.exm.agroxm.data.io.RegistrationBody
 import gr.exm.agroxm.databinding.ActivitySignupBinding
-import gr.exm.agroxm.util.AuthHelper
+import gr.exm.agroxm.data.AuthHelper
 import gr.exm.agroxm.util.onTextChanged
 import kotlinx.coroutines.*
 import timber.log.Timber

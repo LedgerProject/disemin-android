@@ -7,8 +7,7 @@ import com.squareup.moshi.Moshi
 import gr.exm.agroxm.BuildConfig
 import gr.exm.agroxm.data.*
 import gr.exm.agroxm.data.Field
-import gr.exm.agroxm.util.AuthHelper.NO_AUTH_HEADER
-import gr.exm.agroxm.util.Measurements
+import gr.exm.agroxm.data.AuthHelper.NO_AUTH_HEADER
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

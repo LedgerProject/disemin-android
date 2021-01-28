@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.databinding.ListItemFieldBinding
 
-class FieldAdapter(val listener: OnFieldSelectedListener) :
+class FieldAdapter(private val listener: OnFieldSelectedListener) :
     ListAdapter<Field, FieldAdapter.FieldViewHolder>(FieldDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FieldViewHolder {

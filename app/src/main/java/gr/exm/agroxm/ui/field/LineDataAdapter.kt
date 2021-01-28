@@ -44,7 +44,7 @@ class LineDataAdapter :
             binding.chart.description = null
             binding.chart.legend.isEnabled = false
             binding.chart.isScaleYEnabled = false
-            binding.chart.isScaleXEnabled = true
+            //binding.chart.isScaleXEnabled = true
 
             val xAxis: XAxis = binding.chart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -73,7 +73,7 @@ class LineDataAdapter :
             // must happen after setting the chart data.
             binding.chart.setVisibleXRange(
                 TimeUnit.MINUTES.toMillis(30).toFloat(),
-                TimeUnit.HOURS.toMillis(1).toFloat()
+                TimeUnit.HOURS.toMillis(3).toFloat()
             )
 
             // Scroll right to the latest X value
