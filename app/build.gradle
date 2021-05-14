@@ -79,11 +79,11 @@ dependencies {
     // Google Play Services for Location & Maps
     implementation "com.google.android.gms:play-services-location:18.0.0"
     implementation "com.google.android.gms:play-services-maps:17.0.1"
-    implementation "com.google.maps.android:maps-ktx:3.0.0"
+    implementation "com.google.maps.android:maps-ktx:3.0.1"
 
     // Google Maps Utils
     implementation "com.google.maps.android:android-maps-utils:2.2.3"
-    implementation "com.google.maps.android:maps-utils-ktx:3.0.0"
+    implementation "com.google.maps.android:maps-utils-ktx:3.0.1"
 
     // Logging
     implementation "com.jakewharton.timber:timber:4.7.1"
@@ -117,4 +117,8 @@ dependencies {
     // Permissions
     implementation "com.qifan.powerpermission:powerpermission:1.4.0"
     implementation "com.qifan.powerpermission:powerpermission-coroutines:1.4.0"
+    implementation "com.github.fondesa:kpermissions:3.2.1"
+
+    // Dependency Injection
+    implementation "io.insert-koin:koin-android:3.0.1"
 }
