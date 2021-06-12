@@ -31,4 +31,5 @@
     <string name="hint_field_description">Field Description</string>
     <string name="hint_crop_name">Crop Name</string>
     <string name="hint_crop_description">Crop Description</string>
+    <string name="action_logout">Logout</string>
 </resources>

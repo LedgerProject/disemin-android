@@ -20,7 +20,8 @@ android {
         manifestPlaceholders = [google_api_key: "$GOOGLE_API_KEY"]
 
         // BuildConfig fields
-        buildConfigField("String", "BASE_URL", "\"$BASE_URL\"")
+        buildConfigField("String", "API_URL", "\"$API_URL\"")
+        buildConfigField("String", "AUTH_URL", "\"$AUTH_URL\"")
     }
 
     buildTypes {
@@ -79,11 +80,11 @@ dependencies {
     // Google Play Services for Location & Maps
     implementation "com.google.android.gms:play-services-location:18.0.0"
     implementation "com.google.android.gms:play-services-maps:17.0.1"
-    implementation "com.google.maps.android:maps-ktx:3.0.1"
+    implementation "com.google.maps.android:maps-ktx:3.1.0"
 
     // Google Maps Utils
     implementation "com.google.maps.android:android-maps-utils:2.2.3"
-    implementation "com.google.maps.android:maps-utils-ktx:3.0.1"
+    implementation "com.google.maps.android:maps-utils-ktx:3.1.0"
 
     // Logging
     implementation "com.jakewharton.timber:timber:4.7.1"
@@ -96,8 +97,8 @@ dependencies {
     // HTTP client
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
-    implementation "com.squareup.okhttp3:okhttp:4.9.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
 
     // Network response wrapper
     implementation "com.github.haroldadmin:NetworkResponseAdapter:4.2.1"
@@ -121,4 +122,9 @@ dependencies {
 
     // Dependency Injection
     implementation "io.insert-koin:koin-android:3.0.2"
+
+    // Data types and more
+    implementation platform("io.arrow-kt:arrow-stack:0.13.2")
+    implementation "io.arrow-kt:arrow-core"
+    implementation "io.arrow-kt:arrow-fx-coroutines"
 }

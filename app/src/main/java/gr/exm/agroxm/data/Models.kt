@@ -19,14 +19,14 @@ data class Credentials(
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class AuthToken(
-    val token: String?,
-    val refreshToken: String?,
+    val token: String,
+    val refreshToken: String,
 ) : Parcelable {
     fun isTokenValid(): Boolean =
-        !token.isNullOrEmpty() && !JWT(token).isExpired(60)
+        token.isNotEmpty() && !JWT(token).isExpired(60)
 
     fun isRefreshTokenValid(): Boolean =
-        !refreshToken.isNullOrEmpty() && !JWT(refreshToken).isExpired(60)
+        refreshToken.isNotEmpty() && !JWT(refreshToken).isExpired(60)
 }
 
 @Parcelize
@@ -51,7 +51,13 @@ data class User(
 data class Location(
     val latitude: Double,
     val longitude: Double,
-) : Parcelable
+) : Parcelable {
+    companion object {
+        fun empty() = Location(0.0, 0.0)
+    }
+
+    fun isEmpty() = this.latitude == 0.0 && this.longitude == 0.0
+}
 
 @JsonClass(generateAdapter = true)
 @Parcelize

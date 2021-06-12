@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 import com.haroldadmin.cnradapter.NetworkResponse
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.data.Resource
-import gr.exm.agroxm.data.io.ApiService
+import gr.exm.agroxm.data.network.ApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel : ViewModel(), KoinComponent {
+
+    private val apiService: ApiService by inject()
 
     private val _data = MutableLiveData<Resource<List<Field>>>().apply {
         value = Resource.loading()
@@ -24,7 +27,7 @@ class HomeViewModel : ViewModel() {
         _data.postValue(Resource.loading())
 
         CoroutineScope(Dispatchers.IO).launch {
-            when (val response = ApiService.get().fields()) {
+            when (val response = apiService.fields()) {
                 is NetworkResponse.Success -> {
                     Timber.d("Got fields")
                     _data.postValue(Resource.success(response.body))

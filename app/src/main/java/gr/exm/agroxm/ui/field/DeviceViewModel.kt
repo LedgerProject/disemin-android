@@ -12,7 +12,7 @@ import gr.exm.agroxm.R
 import gr.exm.agroxm.data.Aggregation
 import gr.exm.agroxm.data.Resource
 import gr.exm.agroxm.data.TimeWindow
-import gr.exm.agroxm.data.io.ApiService
+import gr.exm.agroxm.data.network.ApiService
 import gr.exm.agroxm.util.ResourcesHelper
 import gr.exm.agroxm.util.endOfHour
 import gr.exm.agroxm.util.millis
@@ -21,13 +21,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class DeviceViewModel : ViewModel() {
+class DeviceViewModel : ViewModel(), KoinComponent {
 
     enum class Mode {
         LAST_HOUR,
@@ -35,6 +37,8 @@ class DeviceViewModel : ViewModel() {
         LAST_WEEK,
         LAST_MONTH
     }
+
+    private val apiService: ApiService by inject()
 
     private val _data = MutableLiveData<Resource<List<LineData>>>().apply {
         value = Resource.loading()
@@ -60,7 +64,7 @@ class DeviceViewModel : ViewModel() {
 
         // Start new job
         job = CoroutineScope(Dispatchers.IO).launch {
-            val devices = ApiService.get().getFieldDevices(fieldId)
+            val devices = apiService.getFieldDevices(fieldId)
             if (devices !is NetworkResponse.Success || devices.body.isNullOrEmpty()) {
                 Timber.d("No devices to query data for: $devices")
                 return@launch _data.postValue(Resource.error("No devices in this field."))
@@ -69,7 +73,7 @@ class DeviceViewModel : ViewModel() {
             val deviceId = devices.body.first().id
             val timeWindow = getTimeWindow(mode)
 
-            val response = ApiService.get().deviceData(
+            val response = apiService.deviceData(
                 deviceId = deviceId,
                 startTs = timeWindow.startTs,
                 endTs = timeWindow.endTs,

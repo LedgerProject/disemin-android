@@ -1,46 +1,14 @@
-package gr.exm.agroxm.data.io
+package gr.exm.agroxm.data.network
 
-import android.content.Context
 import com.haroldadmin.cnradapter.NetworkResponse
-import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
-import com.squareup.moshi.Moshi
-import gr.exm.agroxm.BuildConfig
 import gr.exm.agroxm.data.*
 import gr.exm.agroxm.data.Field
-import gr.exm.agroxm.data.AuthHelper.NO_AUTH_HEADER
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
-import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
-import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
 
 interface ApiService {
-
-    @POST("/auth/login")
-    @Headers("$NO_AUTH_HEADER: true")
-    suspend fun login(
-        @Body credentials: Credentials,
-    ): NetworkResponse<AuthToken, ErrorResponse>
-
-    @POST("/auth/register")
-    @Headers("$NO_AUTH_HEADER: true")
-    suspend fun register(
-        @Body registration: RegistrationBody,
-    ): NetworkResponse<AuthToken, ErrorResponse>
-
-    @POST("/auth/refresh")
-    @Headers("$NO_AUTH_HEADER: true")
-    suspend fun refresh(
-        @Body authToken: AuthToken,
-    ): NetworkResponse<AuthToken, ErrorResponse>
-
     @GET("/auth/user")
     suspend fun user(): NetworkResponse<User, ErrorResponse>
 
@@ -148,64 +116,4 @@ interface ApiService {
 
     @GET("/forecasts")
     suspend fun getAvailableForecasts(): NetworkResponse<List<Forecast>, ErrorResponse>
-
-    companion object {
-
-        private const val CACHE_SIZE = 50L * 1024L * 1024L // 50MB
-
-        private var instance: ApiService? = null
-
-        fun init(context: Context) {
-            if (instance != null) {
-                throw Exception("ApiService.init() has already been called.")
-            }
-            instance = create(context)
-        }
-
-        @Synchronized
-        fun get(): ApiService {
-            if (instance == null) {
-                throw NullPointerException("Instance is null. Have you called ApiService.init()?")
-            }
-            return instance as ApiService
-        }
-
-        private fun create(context: Context): ApiService {
-            Timber.d("Creating ApiService instance.")
-
-            // Install HTTP cache
-            val cache = Cache(context.cacheDir, CACHE_SIZE)
-
-            // Add http logging
-            val logger = HttpLoggingInterceptor()
-                .setLevel(if (BuildConfig.DEBUG) BODY else NONE)
-
-            // Create client
-            val client: OkHttpClient = OkHttpClient.Builder()
-                .authenticator(AuthTokenAuthenticator())
-                .addInterceptor(AuthTokenInterceptor())
-                .addInterceptor(logger)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .cache(cache)
-                .build()
-
-            // Create JSON serializer
-            val moshi = MoshiConverterFactory.create(Moshi.Builder().build()).asLenient()
-
-            // Create retrofit instance
-            val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .addConverterFactory(moshi)
-                .addCallAdapterFactory(NetworkResponseAdapterFactory())
-                .client(client)
-                .build()
-
-            // TODO Add error body converter
-
-            // Create service
-            return retrofit.create(ApiService::class.java)
-        }
-    }
 }

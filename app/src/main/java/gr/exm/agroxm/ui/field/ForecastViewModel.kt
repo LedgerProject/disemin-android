@@ -12,19 +12,21 @@ import gr.exm.agroxm.R
 import gr.exm.agroxm.data.Aggregation
 import gr.exm.agroxm.data.Resource
 import gr.exm.agroxm.data.TimeWindow
-import gr.exm.agroxm.data.io.ApiService
+import gr.exm.agroxm.data.network.ApiService
 import gr.exm.agroxm.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ForecastViewModel : ViewModel() {
+class ForecastViewModel : ViewModel(), KoinComponent {
 
     enum class Mode {
         NEXT_HOUR,
@@ -32,6 +34,8 @@ class ForecastViewModel : ViewModel() {
         NEXT_24H,
         NEXT_WEEK
     }
+
+    private val apiService: ApiService by inject()
 
     private val _data = MutableLiveData<Resource<List<LineData>>>().apply {
         value = Resource.loading()
@@ -57,7 +61,7 @@ class ForecastViewModel : ViewModel() {
 
         // Start new job
         job = CoroutineScope(Dispatchers.IO).launch {
-            val devices = ApiService.get().getFieldForecasts(fieldId)
+            val devices = apiService.getFieldForecasts(fieldId)
             if (devices !is NetworkResponse.Success || devices.body.isNullOrEmpty()) {
                 Timber.d("No forecasts to query data for: $devices")
                 return@launch _data.postValue(Resource.error("No forecasts in this field."))
@@ -66,7 +70,7 @@ class ForecastViewModel : ViewModel() {
             val deviceId = devices.body.first().id
             val timeWindow = getTimeWindow(mode)
 
-            val response = ApiService.get().forecastData(
+            val response = apiService.forecastData(
                 deviceId = deviceId,
                 startTs = timeWindow.startTs,
                 endTs = timeWindow.endTs,

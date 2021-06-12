@@ -11,24 +11,27 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import com.haroldadmin.cnradapter.NetworkResponse
 import gr.exm.agroxm.data.Device
-import gr.exm.agroxm.data.io.ApiService
+import gr.exm.agroxm.data.network.ApiService
 import gr.exm.agroxm.databinding.FragmentAddFieldDeviceBinding
 import gr.exm.agroxm.ui.DataProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-class AddFieldForecast : Fragment(), DataProvider {
+class AddFieldForecast : Fragment(), DataProvider, KoinComponent {
 
+    private val apiService: ApiService by inject()
     private val viewModel: DataViewModel by activityViewModels()
     private lateinit var binding: FragmentAddFieldDeviceBinding
     private var adapter: DeviceAdapter = DeviceAdapter()
 
     fun fetch() {
         CoroutineScope(Dispatchers.IO).launch {
-            when (val response = ApiService.get().getAvailableForecasts()) {
+            when (val response = apiService.getAvailableForecasts()) {
                 is NetworkResponse.Success -> {
                     Timber.d("Got devices.")
                     withContext(Dispatchers.Main) {

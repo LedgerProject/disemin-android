@@ -1,25 +1,31 @@
-package gr.exm.agroxm.ui
+package gr.exm.agroxm.ui.signup
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar
-import com.haroldadmin.cnradapter.NetworkResponse
 import gr.exm.agroxm.R
-import gr.exm.agroxm.data.Credentials
+import gr.exm.agroxm.data.Resource
 import gr.exm.agroxm.data.Role
-import gr.exm.agroxm.data.io.ApiService
-import gr.exm.agroxm.data.io.RegistrationBody
+import gr.exm.agroxm.data.Status
 import gr.exm.agroxm.databinding.ActivitySignupBinding
-import gr.exm.agroxm.data.AuthHelper
+import gr.exm.agroxm.ui.Navigator
+import gr.exm.agroxm.ui.login.LoginActivity
+import gr.exm.agroxm.util.Validator
 import gr.exm.agroxm.util.onTextChanged
 import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
+import org.koin.core.component.KoinComponent
 import timber.log.Timber
 
-class SignupActivity : AppCompatActivity() {
+class SignupActivity : AppCompatActivity(), KoinComponent {
 
+    private val model: SignupViewModel by viewModels()
+    private val navigator: Navigator by inject()
+    private val validator: Validator by inject()
     private lateinit var binding: ActivitySignupBinding
     private var snackbar: Snackbar? = null
 
@@ -55,12 +61,15 @@ class SignupActivity : AppCompatActivity() {
         }
 
         binding.signup.setOnClickListener {
-            if (binding.username.text.isNullOrEmpty() || binding.username.text?.contains("@") == false) {
+            val username = binding.username.text.toString()
+            val password = binding.password.text.toString()
+
+            if (validator.validateUsername(username)) {
                 binding.usernameContainer.error = "Invalid email"
                 return@setOnClickListener
             }
 
-            if (binding.password.text.isNullOrEmpty() || binding.password.text.toString().length < 6) {
+            if (validator.validatePassword(password)) {
                 binding.passwordContainer.error = "Invalid password"
                 return@setOnClickListener
             }
@@ -71,51 +80,42 @@ class SignupActivity : AppCompatActivity() {
             binding.password.isEnabled = false
             binding.loading.visibility = View.VISIBLE
 
-            signup(
-                RegistrationBody(
-                    username = binding.username.text.toString(),
-                    password = binding.password.text.toString(),
-                    role = Role.FARMER,
-                    firstName = binding.firstName.text.toString(),
-                    lastName = binding.lastName.text.toString()
-                )
+            model.signup(
+                username = username,
+                password = password,
+                role = Role.FARMER,
+                firstName = binding.firstName.text.toString(),
+                lastName = binding.lastName.text.toString()
             )
+        }
+
+        // Listen for login state change
+        model.isSignedUp().observe(this) { result ->
+            onSignupResult(result)
         }
     }
 
-    private fun signup(form: RegistrationBody) {
-        CoroutineScope(Dispatchers.IO).launch {
-            when (val response = ApiService.get().register(form)) {
-                is NetworkResponse.Success -> {
-                    Timber.d("Signup success")
-
-                    val auth = response.body
-                    Timber.d("Got token ${auth.token}")
-
-                    // Save credentials
-                    AuthHelper.setCredentials(Credentials(form.username, form.password))
-
-                    Timber.d("Starting main app flow.")
-                    startActivity(Intent(this@SignupActivity, MainActivity::class.java))
-                    finish()
-                }
-                is NetworkResponse.ServerError -> {
-                    val error = response.body
-                    Timber.d("Server Error ${error?.status}. ${error?.error}. ${error?.message}.")
-                    showError("Server Error ${error?.status}. ${error?.error}. ${error?.message}.")
-                }
-                is NetworkResponse.NetworkError -> {
-                    Timber.d(response.error, "Network Error")
-                    showError("Network Error. Please try again.")
-                }
+    private fun onSignupResult(result: Resource<Unit>) {
+        when (result.status) {
+            Status.SUCCESS -> {
+                Timber.d("Signup success. Starting main app flow.")
+                navigator.showHome(this)
+                finish()
             }
-            withContext(Dispatchers.Main) {
-                Timber.d("Updating the UI")
+            Status.ERROR -> {
                 binding.firstName.isEnabled = true
                 binding.lastName.isEnabled = true
                 binding.username.isEnabled = true
                 binding.password.isEnabled = true
                 binding.loading.visibility = View.INVISIBLE
+                showError("Could not signup. ${result.message}.")
+            }
+            Status.LOADING -> {
+                binding.firstName.isEnabled = false
+                binding.lastName.isEnabled = false
+                binding.username.isEnabled = false
+                binding.password.isEnabled = false
+                binding.loading.visibility = View.VISIBLE
             }
         }
     }

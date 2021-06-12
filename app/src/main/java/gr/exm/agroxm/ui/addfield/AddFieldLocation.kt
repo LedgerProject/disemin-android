@@ -63,7 +63,7 @@ class AddFieldLocation : SupportMapFragment(), DataProvider {
 
                 // Move the center map marker, whenever the map is moved
                 map.setOnCameraMoveListener {
-                    center.position = map.cameraPosition.target
+                    center?.position = map.cameraPosition.target
                 }
 
                 // Get location permission
