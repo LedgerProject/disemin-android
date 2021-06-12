@@ -1,4 +1,4 @@
-package gr.exm.agroxm.data.io
+package gr.exm.agroxm.data.network
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass

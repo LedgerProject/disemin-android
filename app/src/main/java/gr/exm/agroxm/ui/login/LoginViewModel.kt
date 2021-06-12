@@ -3,7 +3,7 @@ package gr.exm.agroxm.ui.login
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import gr.exm.agroxm.data.Resource
-import gr.exm.agroxm.data.repository.CredentialsRepository
+import gr.exm.agroxm.data.repository.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import timber.log.Timber
 
 class LoginViewModel : ViewModel(), KoinComponent {
 
-    private val repository: CredentialsRepository by inject()
+    private val repository: AuthRepository by inject()
 
     private val isLoggedIn = MutableLiveData<Resource<Unit>>()
     fun isLoggedIn() = isLoggedIn

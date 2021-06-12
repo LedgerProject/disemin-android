@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), KoinComponent {
             if (it.itemId == R.id.logout) {
                 model.logout()
                 navigator.showSplash(this)
+                finish()
                 return@setOnMenuItemClickListener true
             }
             return@setOnMenuItemClickListener false

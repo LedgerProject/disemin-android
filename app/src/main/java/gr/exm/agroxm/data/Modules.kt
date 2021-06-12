@@ -8,17 +8,14 @@ import com.google.android.gms.location.SettingsClient
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.squareup.moshi.Moshi
 import gr.exm.agroxm.BuildConfig
-import gr.exm.agroxm.data.datasource.LocationDataSource
-import gr.exm.agroxm.data.datasource.LocationDataSourceImpl
+import gr.exm.agroxm.data.datasource.*
 import gr.exm.agroxm.data.network.ApiService
 import gr.exm.agroxm.data.network.AuthService
 import gr.exm.agroxm.data.network.interceptor.ApiRequestInterceptor
 import gr.exm.agroxm.data.network.interceptor.AuthRequestInterceptor
 import gr.exm.agroxm.data.network.interceptor.AuthTokenAuthenticator
-import gr.exm.agroxm.data.repository.AuthTokenRepository
-import gr.exm.agroxm.data.repository.AuthTokenRepositoryImpl
-import gr.exm.agroxm.data.repository.CredentialsRepository
-import gr.exm.agroxm.data.repository.CredentialsRepositoryImpl
+import gr.exm.agroxm.data.repository.AuthRepository
+import gr.exm.agroxm.data.repository.AuthRepositoryImpl
 import gr.exm.agroxm.ui.Navigator
 import gr.exm.agroxm.util.Validator
 import okhttp3.Cache
@@ -49,15 +46,19 @@ private val datasources = module {
     single<SharedPreferences>(named(PREFERENCE_CREDENTIALS)) {
         androidContext().getSharedPreferences(PREFERENCE_CREDENTIALS, Context.MODE_PRIVATE)
     }
+
+    single<AuthTokenDataSource> {
+        AuthTokenDataSourceImpl(get(named(PREFERENCE_AUTH_TOKEN)))
+    }
+
+    single<CredentialsDataSource> {
+        CredentialsDataSourceImpl(get(named(PREFERENCE_CREDENTIALS)))
+    }
 }
 
 private val repositories = module {
-    single<AuthTokenRepository> {
-        AuthTokenRepositoryImpl(get(named(PREFERENCE_AUTH_TOKEN)))
-    }
-
-    single<CredentialsRepository> {
-        CredentialsRepositoryImpl(get(named(PREFERENCE_CREDENTIALS)))
+    single<AuthRepository> {
+        AuthRepositoryImpl(get(), get())
     }
 }
 

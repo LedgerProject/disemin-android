@@ -20,12 +20,12 @@ class SplashActivity : AppCompatActivity(), KoinComponent {
             result.mapLeft {
                 Timber.d("Not logged in.")
                 navigator.showLogin(this)
-                finish()
-            }.map {
-                Timber.d("Already logged in as ${it}")
+            }.map { username ->
+                Timber.d("Already logged in as $username")
                 navigator.showHome(this)
-                finish()
             }
+            finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 }

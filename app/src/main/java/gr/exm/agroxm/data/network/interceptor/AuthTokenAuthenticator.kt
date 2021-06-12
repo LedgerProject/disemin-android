@@ -1,13 +1,13 @@
 package gr.exm.agroxm.data.network.interceptor
 
 import com.haroldadmin.cnradapter.NetworkResponse
-import gr.exm.agroxm.data.io.LoginBody
-import gr.exm.agroxm.data.io.RefreshBody
+import gr.exm.agroxm.data.datasource.AuthTokenDataSource
+import gr.exm.agroxm.data.datasource.CredentialsDataSource
 import gr.exm.agroxm.data.network.AuthService
 import gr.exm.agroxm.data.network.Credentials
+import gr.exm.agroxm.data.network.LoginBody
+import gr.exm.agroxm.data.network.RefreshBody
 import gr.exm.agroxm.data.path
-import gr.exm.agroxm.data.repository.AuthTokenRepository
-import gr.exm.agroxm.data.repository.CredentialsRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -19,9 +19,9 @@ import timber.log.Timber
 
 class AuthTokenAuthenticator : Authenticator, KoinComponent {
 
-    private val authService by inject<AuthService>()
-    private val authTokenRepository by inject<AuthTokenRepository>()
-    private val credentialsRepository by inject<CredentialsRepository>()
+    private val authService: AuthService by inject()
+    private val authTokenRepository: AuthTokenDataSource by inject()
+    private val credentialsRepository: CredentialsDataSource by inject()
 
     override fun authenticate(route: Route?, response: Response): Request? {
         // The original request

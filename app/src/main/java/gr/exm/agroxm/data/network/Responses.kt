@@ -32,8 +32,11 @@ data class AuthToken(
 
 @JsonClass(generateAdapter = true)
 data class AuthError(
-    @Json(name = "detail") val message: String,
-    @Json(name = "error_code") val code: String
+    @Json(name = "message") val message: String,
+    @Json(name = "error") val error: String,
+    @Json(name = "path") val path: String,
+    @Json(name = "status") val status: Int,
+    @Json(name = "timestamp") val timestamp: String
 )
 
 @JsonClass(generateAdapter = true)

@@ -1,18 +1,18 @@
-package gr.exm.agroxm.data.repository
+package gr.exm.agroxm.data.datasource
 
 import android.content.SharedPreferences
 import arrow.core.Either
 import gr.exm.agroxm.data.network.AuthToken
 
-interface AuthTokenRepository {
+interface AuthTokenDataSource {
     suspend fun getAuthToken(): Either<Error, AuthToken>
     suspend fun setAuthToken(token: AuthToken)
     suspend fun clear()
 }
 
-class AuthTokenRepositoryImpl(
+class AuthTokenDataSourceImpl(
     private val preferences: SharedPreferences,
-) : AuthTokenRepository {
+) : AuthTokenDataSource {
 
     companion object {
         const val KEY_ACCESS = "access"

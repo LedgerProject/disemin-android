@@ -1,9 +1,9 @@
 package gr.exm.agroxm.data.network.interceptor
 
 import arrow.core.getOrHandle
+import gr.exm.agroxm.data.datasource.AuthTokenDataSource
 import gr.exm.agroxm.data.network.interceptor.ApiRequestInterceptor.Companion.AUTH_HEADER
 import gr.exm.agroxm.data.path
-import gr.exm.agroxm.data.repository.AuthTokenRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -22,7 +22,7 @@ class ApiRequestInterceptor : Interceptor, KoinComponent {
         const val AUTH_HEADER = "X-Authorization"
     }
 
-    private val authTokenRepository by inject<AuthTokenRepository>()
+    private val authTokenDataSource: AuthTokenDataSource by inject()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         // Original request
@@ -30,11 +30,11 @@ class ApiRequestInterceptor : Interceptor, KoinComponent {
 
         // Add auth header using the auth token with Bearer schema
         Timber.d("[${request.path()}] Adding Authorization header.")
-        return chain.proceed(request.signedRequest(authTokenRepository))
+        return chain.proceed(request.signedRequest(authTokenDataSource))
     }
 }
 
-private fun Request.signedRequest(authTokenRepository: AuthTokenRepository): Request {
+private fun Request.signedRequest(authTokenRepository: AuthTokenDataSource): Request {
     return runCatching {
         // Get stored auth token
         val authToken = runBlocking {
