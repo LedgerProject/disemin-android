@@ -84,7 +84,6 @@ private val network = module {
     single<AuthService> {
         // Create client
         val client: OkHttpClient = OkHttpClient.Builder()
-            .authenticator(AuthTokenAuthenticator())
             .addInterceptor(get() as HttpLoggingInterceptor)
             .addInterceptor(AuthRequestInterceptor())
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -110,6 +109,7 @@ private val network = module {
 
         // Create client
         val client: OkHttpClient = OkHttpClient.Builder()
+            .authenticator(AuthTokenAuthenticator())
             .addInterceptor(ApiRequestInterceptor())
             .addInterceptor(get() as HttpLoggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
