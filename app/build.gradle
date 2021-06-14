@@ -24,8 +24,18 @@ android {
         buildConfigField("String", "AUTH_URL", "\"$AUTH_URL\"")
     }
 
+    signingConfigs {
+        release {
+            storeFile file("$SIGNING_KEYSTORE")
+            storePassword "$SIGNING_KEYSTORE_PASSWORD"
+            keyAlias "$SIGNING_KEY_ALIAS"
+            keyPassword "$SIGNING_KEY_PASSWORD"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
