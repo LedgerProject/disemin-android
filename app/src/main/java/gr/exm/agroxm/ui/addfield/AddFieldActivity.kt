@@ -57,8 +57,6 @@ class AddFieldActivity : AppCompatActivity() {
     }
 
     private fun onPageSelected(position: Int) {
-        Toast.makeText(this, "Position #$position", Toast.LENGTH_SHORT).show()
-
         val hasNext = position < adapter.itemCount - 1
         binding.next.text = if (hasNext) "Next" else "Submit"
         binding.next.setOnClickListener { if (hasNext) next(position) else submit(position) }
