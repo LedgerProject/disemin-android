@@ -4,7 +4,7 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
-import android.widget.Toast
+import android.os.Looper
 import androidx.lifecycle.coroutineScope
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
@@ -13,14 +13,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.awaitMap
-import com.qifan.powerpermission.coroutines.awaitAskPermissionsAllGranted
-import com.qifan.powerpermission.rationale.createDialogRationale
 import gr.exm.agroxm.R
+import gr.exm.agroxm.ui.common.checkPermissionsAndThen
+import gr.exm.agroxm.ui.common.toast
+import org.koin.core.component.KoinComponent
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("MissingPermission")
-class AddFieldLocation : SupportMapFragment(), DataProvider {
+class AddFieldLocation : SupportMapFragment(), DataProvider, KoinComponent {
 
     private lateinit var locationClient: FusedLocationProviderClient
 
@@ -65,65 +66,64 @@ class AddFieldLocation : SupportMapFragment(), DataProvider {
                     center?.position = map.cameraPosition.target
                 }
 
-                // Get location permission
-                val hasPermission = awaitAskPermissionsAllGranted(
-                    ACCESS_COARSE_LOCATION,
-                    rationaleDelegate = createDialogRationale(
-                        R.string.permission_location_title,
-                        ACCESS_COARSE_LOCATION,
-                        getString(R.string.permission_location_rationale)
-                    )
+                checkPermissionsAndThen(
+                    permissions = arrayOf(ACCESS_COARSE_LOCATION),
+                    rationaleTitle = getString(R.string.permission_location_title),
+                    rationaleMessage = getString(R.string.permission_location_rationale),
+                    onGranted = {
+                        // Get last location
+                        getLocationAndThen { location ->
+                            Timber.d("Got user locationt: $location")
+                            setFieldLocation(location)
+                            updateCamera(location)
+                        }
+
+                        // Enable user location on map
+                        map.isMyLocationEnabled = true
+                    },
+                    onDenied = {
+
+                    }
                 )
-
-                // Enable user location on map
-                map.isMyLocationEnabled = hasPermission
-
-                // Get the current user location
-                if (hasPermission) {
-                    Timber.d("Trying to get current location")
-                    locationClient.lastLocation
-                        .addOnSuccessListener {
-                            if (it == null) {
-                                Timber.d("Current location is null. Requesting fresh location.")
-
-                                locationClient.requestLocationUpdates(
-                                    LocationRequest().apply {
-                                        numUpdates = 1
-                                        interval = TimeUnit.SECONDS.toMillis(2)
-                                        fastestInterval = 0
-                                        maxWaitTime = TimeUnit.SECONDS.toMillis(5)
-                                        priority = PRIORITY_BALANCED_POWER_ACCURACY
-                                    },
-                                    object : LocationCallback() {
-                                        override fun onLocationResult(result: LocationResult?) {
-                                            Timber.d("New location result: ${result?.lastLocation?.latitude}, ${result?.lastLocation?.longitude}")
-                                            result?.lastLocation?.let { it -> setFieldLocation(it) }
-                                            updateCamera(result?.lastLocation)
-                                        }
-                                    },
-                                    null
-                                )
-                            } else {
-                                Timber.d("Got current location: ${it.latitude}, ${it.longitude}")
-                                setFieldLocation(it)
-                                updateCamera(it)
-                            }
-                        }
-                        .addOnFailureListener {
-                            Timber.d(it, "Could not get current location.")
-                            Toast.makeText(
-                                requireActivity(),
-                                "Could not get current location.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                }
             } catch (e: Exception) {
                 Timber.d(e, "Something went wrong")
             } finally {
                 Timber.d("Destroying")
             }
         }
+    }
+
+    private fun getLocationAndThen(onLocation: (location: Location) -> Unit) {
+        locationClient.lastLocation
+            .addOnSuccessListener {
+                if (it == null) {
+                    Timber.d("Current location is null. Requesting fresh location.")
+
+                    locationClient.requestLocationUpdates(
+                        LocationRequest.create()
+                            .setNumUpdates(1)
+                            .setInterval(TimeUnit.SECONDS.toMillis(2))
+                            .setFastestInterval(0)
+                            .setMaxWaitTime(TimeUnit.SECONDS.toMillis(5))
+                            .setPriority(PRIORITY_BALANCED_POWER_ACCURACY),
+                        object : LocationCallback() {
+                            override fun onLocationResult(result: LocationResult?) {
+                                result?.lastLocation?.let { location ->
+                                    onLocation.invoke(location)
+                                } ?: toast("Could not get current location.")
+                            }
+                        },
+                        Looper.getMainLooper()
+                    )
+                } else {
+                    Timber.d("Got current location: ${it.latitude}, ${it.longitude}")
+                    onLocation.invoke(it)
+                }
+            }
+            .addOnFailureListener {
+                Timber.d(it, "Could not get current location.")
+                toast("Could not get current location.")
+            }
     }
 
     fun setFieldLocation(location: Location) {

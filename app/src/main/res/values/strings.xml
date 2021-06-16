@@ -32,4 +32,11 @@
     <string name="hint_crop_name">Crop Name</string>
     <string name="hint_crop_description">Crop Description</string>
     <string name="action_logout">Logout</string>
+
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="warn_cancelled">Cancelled!</string>
+    <string name="permission_permanently_denied_title">Permission permanently denied</string>
+    <string name="permission_permanently_denied_rationale">Go to the app settings to give required permissions.</string>
 </resources>
