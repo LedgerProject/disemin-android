@@ -6,6 +6,7 @@ import com.github.mikephil.charting.data.Entry
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
+
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class Credentials(
@@ -106,12 +107,16 @@ data class Log(
 @Parcelize
 data class Telemetry(
     val ts: Long,
-    val value: Float?,
+    val value: String?
 ) : Parcelable {
     fun entry(): Entry = Entry(
         ts.toFloat(),
-        value!!.toFloat()
+        asFloat()
     )
+
+    fun asFloat(): Float = value?.toFloatOrNull() ?: Float.NaN
+    fun asInt(): Int = value?.toIntOrNull() ?: Int.MIN_VALUE
+    fun asString(): String = value ?: ""
 }
 
 @Parcelize
@@ -126,4 +131,19 @@ data class TimeWindow(
     val endTs: Long,
     val aggregation: Aggregation = Aggregation.NONE,
     val interval: Long = 0L,
+) : Parcelable
+
+@Parcelize
+data class CurrentWeather(
+    val ts: Long?,
+    val icon: String?,
+    val temperature: Float?,
+    val precipitation: Float?,
+    val windSpeed: Float?,
+    val windGust: Float?,
+    val windDirection: Int?,
+    val humidity: Float?,
+    val pressure: Float?,
+    val cloud: Float?,
+    val uv: Int?
 ) : Parcelable

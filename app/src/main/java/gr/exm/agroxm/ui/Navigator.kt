@@ -2,7 +2,7 @@ package gr.exm.agroxm.ui
 
 import android.content.Context
 import android.content.Intent
-import gr.exm.agroxm.ui.home.MainActivity
+import gr.exm.agroxm.ui.main.MainActivity
 import gr.exm.agroxm.ui.login.LoginActivity
 import gr.exm.agroxm.ui.signup.SignupActivity
 import gr.exm.agroxm.ui.splash.SplashActivity

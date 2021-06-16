@@ -2,6 +2,7 @@ package gr.exm.agroxm.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.SettingsClient
@@ -16,6 +17,8 @@ import gr.exm.agroxm.data.network.interceptor.AuthRequestInterceptor
 import gr.exm.agroxm.data.network.interceptor.AuthTokenAuthenticator
 import gr.exm.agroxm.data.repository.AuthRepository
 import gr.exm.agroxm.data.repository.AuthRepositoryImpl
+import gr.exm.agroxm.data.repository.FieldRepository
+import gr.exm.agroxm.data.repository.LocationRepository
 import gr.exm.agroxm.ui.Navigator
 import gr.exm.agroxm.util.Validator
 import okhttp3.Cache
@@ -34,9 +37,9 @@ private const val PREFERENCE_AUTH_TOKEN = "PREFS_AUTH_TOKEN"
 private const val PREFERENCE_CREDENTIALS = "PREFS_CREDENTIALS"
 private const val NETWORK_CACHE_SIZE = 50L * 1024L * 1024L // 50MB
 
-private val datasources = module {
-    single<LocationDataSource> {
-        LocationDataSourceImpl()
+private val preferences = module {
+    single<SharedPreferences> {
+        PreferenceManager.getDefaultSharedPreferences(androidContext())
     }
 
     single<SharedPreferences>(named(PREFERENCE_AUTH_TOKEN)) {
@@ -45,6 +48,16 @@ private val datasources = module {
 
     single<SharedPreferences>(named(PREFERENCE_CREDENTIALS)) {
         androidContext().getSharedPreferences(PREFERENCE_CREDENTIALS, Context.MODE_PRIVATE)
+    }
+}
+
+private val datasources = module {
+    single<LocationDataSource> {
+        LocationDataSourceImpl()
+    }
+
+    single<FieldDataSource> {
+        FieldDataSourceImpl(get())
     }
 
     single<AuthTokenDataSource> {
@@ -59,6 +72,12 @@ private val datasources = module {
 private val repositories = module {
     single<AuthRepository> {
         AuthRepositoryImpl(get(), get())
+    }
+    single<FieldRepository> {
+        FieldRepository(get())
+    }
+    single<LocationRepository> {
+        LocationRepository()
     }
 }
 
@@ -84,7 +103,6 @@ private val network = module {
     single<AuthService> {
         // Create client
         val client: OkHttpClient = OkHttpClient.Builder()
-            .authenticator(AuthTokenAuthenticator())
             .addInterceptor(get() as HttpLoggingInterceptor)
             .addInterceptor(AuthRequestInterceptor())
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -110,6 +128,7 @@ private val network = module {
 
         // Create client
         val client: OkHttpClient = OkHttpClient.Builder()
+            .authenticator(AuthTokenAuthenticator())
             .addInterceptor(ApiRequestInterceptor())
             .addInterceptor(get() as HttpLoggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -144,5 +163,11 @@ val navigator = module {
 }
 
 val modules = listOf(
-    datasources, repositories, location, network, navigator, validator
+    preferences,
+    network,
+    datasources,
+    repositories,
+    location,
+    navigator,
+    validator
 )

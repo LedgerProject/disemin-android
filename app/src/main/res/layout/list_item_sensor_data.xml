@@ -8,7 +8,7 @@
     android:layout_marginVertical="@dimen/activity_vertical_margin"
     app:cardElevation="4dp"
     app:cardMaxElevation="4dp"
-    app:contentPadding="16dp">
+    app:contentPadding="@dimen/padding_normal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

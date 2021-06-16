@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import gr.exm.agroxm.databinding.FragmentAddFieldInfoBinding
-import gr.exm.agroxm.ui.DataProvider
 import gr.exm.agroxm.util.onTextChanged
 
 class AddFieldInfo : Fragment(), DataProvider {

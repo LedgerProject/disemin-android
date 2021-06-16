@@ -34,7 +34,7 @@ interface ApiService {
         @Query("limit") limit: Int = 50000,
         @Query("keys") keys: String = "hourly_temperature,hourly_precip_intensity,hourly_humidity,hourly_wind_speed,hourly_wind_gust,hourly_wind_direction,hourly_pressure",
         @Query("agg") aggregation: String = "NONE",
-        @Query("interval") interval: Long = TimeUnit.HOURS.toMillis(1),
+        @Query("interval") interval: Long? = TimeUnit.HOURS.toMillis(1),
     ): NetworkResponse<Map<String, List<Telemetry>>, ErrorResponse>
 
     @GET("/forecast/{deviceId}/data")
@@ -56,7 +56,7 @@ interface ApiService {
         @Query("limit") limit: Int = 50000,
         @Query("keys") keys: String = "hourly_temperature,hourly_precip_intensity,hourly_humidity,hourly_wind_speed,hourly_wind_gust,hourly_wind_direction,hourly_pressure",
         @Query("agg") aggregation: String = "NONE",
-        @Query("interval") interval: Long = TimeUnit.HOURS.toMillis(1),
+        @Query("interval") interval: Long? = TimeUnit.HOURS.toMillis(1),
     ): NetworkResponse<Map<String, List<Telemetry>>, ErrorResponse>
 
     @POST("/field")
