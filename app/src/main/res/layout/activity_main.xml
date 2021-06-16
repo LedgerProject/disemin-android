@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/home"
-            app:title="Hi, Luke!"
+            app:title="@string/app_name"
             app:titleTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
