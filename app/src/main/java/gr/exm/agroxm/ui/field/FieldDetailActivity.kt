@@ -54,7 +54,7 @@ class FieldDetailPagerAdapter(activity: FragmentActivity, val field: Field) :
         }
     }
 
-    override fun getItemCount(): Int = STEP_COUNT
+    override fun getItemCount(): Int = PAGE_COUNT
 
     fun getItemTitle(position: Int): String {
         return when (position) {
@@ -77,6 +77,6 @@ class FieldDetailPagerAdapter(activity: FragmentActivity, val field: Field) :
         internal const val PAGE_CURRENT = 0
         internal const val PAGE_DEVICE = 1
         internal const val PAGE_FORECAST = 2
-        internal const val STEP_COUNT = 3
+        internal const val PAGE_COUNT = 3
     }
 }

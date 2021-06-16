@@ -10,6 +10,7 @@ import gr.exm.agroxm.util.Weather
 import gr.exm.agroxm.util.endOfHour
 import gr.exm.agroxm.util.millis
 import gr.exm.agroxm.util.startOfHour
+import timber.log.Timber
 import java.time.LocalDateTime
 
 class FieldRepository(
@@ -18,6 +19,7 @@ class FieldRepository(
     suspend fun getCurrentWeather(fieldId: String): Either<Error, CurrentWeather> {
         return dataSource.getFieldDevice(fieldId)
             .flatMap { device ->
+                Timber.d("Found device ${device.name}. Getting data.")
                 dataSource.getFieldDeviceData(
                     deviceId = device.id,
                     startTs = LocalDateTime.now().minusHours(3).startOfHour().millis(),

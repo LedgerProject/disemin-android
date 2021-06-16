@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 
 class CurrentWeatherViewModel : ViewModel(), KoinComponent {
 
@@ -36,9 +37,11 @@ class CurrentWeatherViewModel : ViewModel(), KoinComponent {
         job = CoroutineScope(Dispatchers.IO).launch {
             repository.getCurrentWeather(fieldId)
                 .mapLeft {
+                    Timber.d(it, "Could not get current weather")
                     weather.postValue(Resource.error(it.message ?: "No error message"))
                 }
                 .map {
+                    Timber.d("Got current weather")
                     weather.postValue(Resource.success(it))
                 }
         }

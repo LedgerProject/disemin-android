@@ -7,6 +7,7 @@ import gr.exm.agroxm.data.Device
 import gr.exm.agroxm.data.Telemetry
 import gr.exm.agroxm.data.network.ApiService
 import gr.exm.agroxm.data.network.ErrorResponse
+import timber.log.Timber
 
 interface FieldDataSource {
     suspend fun getFieldDevice(fieldId: String): Either<Error, Device>
@@ -28,11 +29,14 @@ class FieldDataSourceImpl(
     override suspend fun getFieldDevice(
         fieldId: String
     ): Either<Error, Device> {
-        return apiService.getFieldDevices(fieldId).map().map {
-            if (it.isNotEmpty()) {
-                it.first()
+        return apiService.getFieldDevices(fieldId).map().map { devices ->
+            Timber.d("Got devices: $devices")
+            return if (devices.isNotEmpty()) {
+                Timber.d("Returning first device: ${devices.first()}")
+                Either.Right(devices.first())
             } else {
-                error("No devices found in the field!")
+                Timber.d("Device list is empty.")
+                eitherError("No devices found in the field!")
             }
         }
     }
@@ -49,32 +53,45 @@ class FieldDataSourceImpl(
         return apiService.deviceData(
             deviceId, startTs, endTs, limit, keys, aggregation.name, interval
         ).map().map {
-            if (it.isNotEmpty()) {
-                it
+            Timber.d("Got device data")
+            return if (it.isNotEmpty()) {
+                Either.Right(it)
             } else {
-                error("No telemetry data for the field!")
+                eitherError("No telemetry data for the field!")
             }
+        }.mapLeft { error ->
+            Timber.d(error, "Could not get devices")
+            error
         }
     }
 
     private fun <T : Any> NetworkResponse<T, ErrorResponse>.map(): Either<Error, T> {
-        return when (this) {
-            is NetworkResponse.Success -> {
-                Either.Right(this.body)
+        Timber.d("Mapping network response")
+        return try {
+            when (this) {
+                is NetworkResponse.Success -> {
+                    Timber.d("Network response: Success")
+                    Either.Right(this.body)
+                }
+                is NetworkResponse.ServerError -> {
+                    Timber.d("Network response: ServerError")
+                    eitherError(this.body?.message ?: this.error.message, this.error)
+                }
+                is NetworkResponse.NetworkError -> {
+                    Timber.d("Network response: NetworkError")
+                    eitherError("Network Error", this.error)
+                }
+                is NetworkResponse.UnknownError -> {
+                    Timber.d("Network response: UnknownError")
+                    eitherError("Unknown Error", this.error)
+                }
             }
-            is NetworkResponse.ServerError -> {
-                error(this.body?.message ?: this.error.message, this.error)
-            }
-            is NetworkResponse.NetworkError -> {
-                error("Network Error", this.error)
-            }
-            is NetworkResponse.UnknownError -> {
-                error("Unknown Error", this.error)
-            }
+        } catch (exception: Exception) {
+            eitherError("Error Mapping Network Response", exception)
         }
     }
 
-    private fun error(message: String?, cause: Throwable?): Either.Left<Error> {
+    private fun eitherError(message: String?, cause: Throwable? = null): Either.Left<Error> {
         return Either.Left(Error(message, cause))
     }
 }
