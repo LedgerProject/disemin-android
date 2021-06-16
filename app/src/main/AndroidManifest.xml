@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgroXM"
         android:usesCleartextTraffic="true"
-        tools:ignore="UnusedAttribute">
+        tools:ignore="UnusedAttribute,LockedOrientationActivity">
 
         <!-- Placeholder for Google Maps API key -->
         <meta-data
@@ -48,22 +48,28 @@
 
         <activity
             android:name=".ui.splash.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgroXM.Splash" />
         <activity
             android:name=".ui.login.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgroXM.NoActionBar" />
         <activity
             android:name=".ui.signup.SignupActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgroXM.NoActionBar" />
         <activity
-            android:name=".ui.FieldDetailActivity"
+            android:name=".ui.field.FieldDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgroXM.NoActionBar" />
         <activity
-            android:name=".ui.AddFieldActivity"
+            android:name=".ui.addfield.AddFieldActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgroXM.NoActionBar" />
         <activity
-            android:name=".ui.home.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgroXM.NoActionBar" />
 
         <!-- Services -->

@@ -1,4 +1,4 @@
-package gr.exm.agroxm.ui
+package gr.exm.agroxm.ui.field
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,8 +8,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.databinding.ActivityFieldDetailBinding
-import gr.exm.agroxm.ui.field.DeviceFragment
-import gr.exm.agroxm.ui.field.ForecastFragment
 
 class FieldDetailActivity : AppCompatActivity() {
 
@@ -49,6 +47,7 @@ class FieldDetailPagerAdapter(activity: FragmentActivity, val field: Field) :
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
+            PAGE_CURRENT -> CurrentWeatherFragment.newInstance(field)
             PAGE_DEVICE -> DeviceFragment.newInstance(field.id)
             PAGE_FORECAST -> ForecastFragment.newInstance(field.id)
             else -> Fragment()
@@ -59,6 +58,7 @@ class FieldDetailPagerAdapter(activity: FragmentActivity, val field: Field) :
 
     fun getItemTitle(position: Int): String {
         return when (position) {
+            PAGE_CURRENT -> "Current"
             PAGE_DEVICE -> "Monitoring"
             PAGE_FORECAST -> "Forecast"
             else -> ""
@@ -74,8 +74,9 @@ class FieldDetailPagerAdapter(activity: FragmentActivity, val field: Field) :
     }
 
     companion object {
-        internal const val PAGE_DEVICE = 0
-        internal const val PAGE_FORECAST = 1
-        internal const val STEP_COUNT = 2
+        internal const val PAGE_CURRENT = 0
+        internal const val PAGE_DEVICE = 1
+        internal const val PAGE_FORECAST = 2
+        internal const val STEP_COUNT = 3
     }
 }

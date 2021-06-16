@@ -12,7 +12,6 @@ import androidx.recyclerview.selection.StorageStrategy
 import com.haroldadmin.cnradapter.NetworkResponse
 import gr.exm.agroxm.data.network.ApiService
 import gr.exm.agroxm.databinding.FragmentAddFieldDeviceBinding
-import gr.exm.agroxm.ui.DataProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

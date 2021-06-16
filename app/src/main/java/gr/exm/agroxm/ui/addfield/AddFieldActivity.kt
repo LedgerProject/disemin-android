@@ -1,4 +1,4 @@
-package gr.exm.agroxm.ui
+package gr.exm.agroxm.ui.addfield
 
 import android.os.Bundle
 import android.widget.Toast

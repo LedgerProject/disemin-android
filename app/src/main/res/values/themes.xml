@@ -21,7 +21,7 @@
         <item name="buttonBarNegativeButtonStyle">@style/Widget.AgroXM.ButtonBar.Button.Subtle</item>
     </style>
 
-    <style name="Theme.AgroXM.Splash" parent="@style/Theme.AgroXM">
+    <style name="Theme.AgroXM.Splash" parent="@style/Theme.AgroXM.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>

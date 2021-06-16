@@ -1,5 +1,8 @@
 package gr.exm.agroxm.data
 
+import arrow.core.Either
+import arrow.core.flatMap
+
 /**
  * Status of a resource that is provided to the UI.
  *
@@ -35,3 +38,18 @@ data class Resource<out T>(val status: Status, val data: T?, val message: String
         }
     }
 }
+
+/*fun <T: Any> Either<Error, T>.resource(): Resource<T> {
+    return mapLeft<Resource<T>> {
+        Resource.error(it.message ?: "No error message")
+    }.map {
+        Resource.success(it)
+    }
+}*/
+
+/*
+fun <T: Any> resource(codeBlock: () -> Either<Error, T>): Resource<T> {
+    return codeBlock()
+        .mapLeft { error -> Resource.error(error.message ?: "No error message") }
+        .map { data -> Resource.success(data) }
+}*/

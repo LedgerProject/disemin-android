@@ -1,4 +1,4 @@
-package gr.exm.agroxm.ui.home
+package gr.exm.agroxm.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,9 +6,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import gr.exm.agroxm.R
 import gr.exm.agroxm.databinding.ActivityMainBinding
-import gr.exm.agroxm.ui.FieldDetailActivity
+import gr.exm.agroxm.ui.field.FieldDetailActivity
 import gr.exm.agroxm.ui.Navigator
-import gr.exm.agroxm.ui.main.MainViewModel
 import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 

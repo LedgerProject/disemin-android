@@ -16,7 +16,6 @@ import com.google.maps.android.ktx.awaitMap
 import com.qifan.powerpermission.coroutines.awaitAskPermissionsAllGranted
 import com.qifan.powerpermission.rationale.createDialogRationale
 import gr.exm.agroxm.R
-import gr.exm.agroxm.ui.DataProvider
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
