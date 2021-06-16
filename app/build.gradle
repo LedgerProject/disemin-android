@@ -5,6 +5,15 @@ plugins {
     id "kotlin-parcelize"
 }
 
+def getGitCommitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--short", "HEAD"
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -43,6 +52,17 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    // Flavor-specific version name & apk file name
+    applicationVariants.all { variant ->
+        def version = "${variant.getVersionName()}-$getGitCommitHash-${variant.buildType.name}"
+        variant.resValue "string", "app_version", "$version"
+
+        variant.outputs.all { output ->
+            output.versionNameOverride = version
+            outputFileName = "agroxm-${version}.apk"
+        }
     }
 
     compileOptions {
