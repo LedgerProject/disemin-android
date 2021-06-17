@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="gr.exm.agroxm">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AgroXM">
+        android:theme="@style/Theme.AgroXM"
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute,LockedOrientationActivity">
 
         <!-- Placeholder for Google Maps API key -->
         <meta-data
@@ -33,18 +37,43 @@
         <activity-alias
             android:name="Home"
             android:label="@string/app_name"
-            android:targetActivity=".ui.SplashActivity">
+            android:targetActivity=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
-        <activity
-            android:name=".ui.SplashActivity"
-            android:theme="@style/Theme.AgroXM.Splash" />
+        <!-- Activities -->
 
-        <activity android:name=".ui.AddFieldActivity" />
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgroXM.Splash" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgroXM.NoActionBar" />
+        <activity
+            android:name=".ui.signup.SignupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgroXM.NoActionBar" />
+        <activity
+            android:name=".ui.field.FieldDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgroXM.NoActionBar" />
+        <activity
+            android:name=".ui.addfield.AddFieldActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgroXM.NoActionBar" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgroXM.NoActionBar" />
+
+        <!-- Services -->
+
     </application>
 
 </manifest>
