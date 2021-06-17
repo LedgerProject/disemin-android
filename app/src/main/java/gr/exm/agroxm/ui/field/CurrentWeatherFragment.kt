@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
+import gr.exm.agroxm.R
 import gr.exm.agroxm.data.CurrentWeather
 import gr.exm.agroxm.data.Field
 import gr.exm.agroxm.data.Resource
@@ -18,9 +19,6 @@ import gr.exm.agroxm.util.Weather
 import gr.exm.agroxm.util.formatDefault
 import gr.exm.agroxm.util.fromMillis
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 
 class CurrentWeatherFragment : Fragment() {
@@ -73,12 +71,13 @@ class CurrentWeatherFragment : Fragment() {
             Status.SUCCESS -> {
                 resource.data?.let { weather ->
                     with(ViewCurrentWeatherBinding.bind(binding.root)) {
-                        icon.setAnimation(Weather.getWeatherAnimation(weather.icon))
+                        icon.setAnimation(R.raw.anim_weather_clear_day)
                         temperature.text = Weather.getFormattedTemperature(weather.temperature)
                         precipitation.text = Weather.getFormattedPrecipitation(weather.precipitation)
                         humidity.text = Weather.getFormattedHumidity(weather.humidity)
                         wind.text = Weather.getFormattedWind(weather.windSpeed, weather.windDirection)
                         cloud.text = Weather.getFormattedCloud(weather.cloud)
+                        solar.text = Weather.getFormattedUV(weather.uv)
                         updated.text = weather.ts?.let {
                             "Updated on ${fromMillis(it).formatDefault()}"
                         } ?: ""

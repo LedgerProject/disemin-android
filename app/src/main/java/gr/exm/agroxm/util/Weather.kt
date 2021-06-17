@@ -64,7 +64,7 @@ object Weather {
             "cloudy" -> R.raw.anim_weather_cloudy
             "partly-cloudy-day" -> R.raw.anim_weather_partly_cloudy_day
             "partly-cloudy-night" -> R.raw.anim_weather_partly_cloudy_night
-            else -> 0
+            else -> R.raw.anim_weather_none
         }
     }
 
@@ -75,6 +75,8 @@ object Weather {
     fun getFormattedHumidity(value: Float?) = getFormattedValueOrEmpty(value, "%")
 
     fun getFormattedCloud(value: Float?) = getFormattedValueOrEmpty(value, "%")
+
+    fun getFormattedUV(value: Int?) = getFormattedValueOrEmpty(value, "UV")
 
     fun getFormattedWindSpeed(value: Float?) = getFormattedValueOrEmpty(value, "km/h")
 
